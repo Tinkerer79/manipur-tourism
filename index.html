@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sana Leibak — Discover Manipur · Lakes, Hills, Festivals & Food</title>
+  <meta name="description" content="Plan Manipur the way it deserves — personalised routes across Loktak Lake, the Ukhrul hills, Imphal's heritage and the festival calendar, with live weather and a travel concierge.">
+  <meta name="theme-color" content="#0d1b24">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230f766e'/%3E%3Cstop offset='1' stop-color='%230b4f4a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M32 14c4 6 10 9 10 17a10 10 0 0 1-20 0c0-8 6-11 10-17z' fill='%23ffd98a'/%3E%3Cpath d='M20 46c8-4 16-4 24 0' stroke='%23fff' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ============================ NAV ============================ -->
+  <nav class="nav on-hero" id="topNav">
+    <div class="nav-inner">
+      <a class="brand" href="#/home" data-nav data-nav-view="home">
+        <span class="brand-mark">✦</span>
+        <span class="brand-name">Sana Leibak<small>Discover Manipur</small></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a class="nav-link active" data-nav="home" href="#/home">Discover</a>
+        <a class="nav-link" data-nav="explore" href="#/explore">Explore</a>
+        <a class="nav-link" data-nav="map" href="#/map">Map</a>
+        <a class="nav-link" data-nav="plan" href="#/plan">Trip Studio</a>
+        <a class="nav-link" data-nav="food" href="#/food">Food</a>
+        <a class="nav-link" data-nav="festivals" href="#/festivals">Festivals</a>
+        <a class="nav-link" data-nav="travel" href="#/travel">Stay & Travel</a>
+      </div>
+      <div class="nav-cta">
+        <button class="trip-fab-btn" id="navTripBtn" aria-label="Open my trip">
+          <span>♡</span> My trip <span class="tripCount">0</span>
+        </button>
+        <button id="menuBtn" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================ HOME ============================ -->
+  <main>
+  <section class="view active" data-view="home">
+
+    <header class="hero">
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 1440 820" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#0a1a2e"/>
+              <stop offset="0.34" stop-color="#16344c"/>
+              <stop offset="0.58" stop-color="#3e6a80"/>
+              <stop offset="0.72" stop-color="#c97f7f"/>
+              <stop offset="0.82" stop-color="#f2b56e"/>
+              <stop offset="1" stop-color="#f8cf8a"/>
+            </linearGradient>
+            <linearGradient id="lakeG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#e8a86e"/>
+              <stop offset="0.12" stop-color="#7d6a68"/>
+              <stop offset="0.4" stop-color="#22485a"/>
+              <stop offset="1" stop-color="#0a2230"/>
+            </linearGradient>
+            <radialGradient id="sunG" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stop-color="#fff3d6" stop-opacity="0.95"/>
+              <stop offset="0.35" stop-color="#ffd98a" stop-opacity="0.55"/>
+              <stop offset="1" stop-color="#ffd98a" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="blurM" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="16"/></filter>
+            <filter id="blurM2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="9"/></filter>
+          </defs>
+
+          <rect width="1440" height="820" fill="url(#skyG)"/>
+
+          <!-- sun -->
+          <g class="sun">
+            <circle cx="470" cy="435" r="230" fill="url(#sunG)"/>
+            <circle cx="470" cy="435" r="46" fill="#ffe9b8"/>
+          </g>
+
+          <!-- birds -->
+          <g class="bird" fill="none" stroke="#0d1f2c" stroke-width="3.5" stroke-linecap="round" opacity="0.75">
+            <path d="M640 210 q10 -12 20 0 q10 -12 20 0"/>
+            <path d="M700 240 q8 -10 16 0 q8 -10 16 0" stroke-width="3"/>
+          </g>
+          <g class="bird b2" fill="none" stroke="#0d1f2c" stroke-width="3" stroke-linecap="round" opacity="0.6">
+            <path d="M980 170 q9 -11 18 0 q9 -11 18 0"/>
+          </g>
+
+          <!-- far ranges -->
+          <path d="M0 452 L120 400 L230 442 L340 386 L470 448 L600 402 L720 446 L860 392 L1000 448 L1120 404 L1250 450 L1360 410 L1440 446 L1440 820 L0 820 Z" fill="#132c3e" opacity="0.85"/>
+          <path d="M0 478 L160 434 L300 472 L430 428 L560 474 L700 432 L840 476 L980 434 L1120 474 L1280 436 L1440 472 L1440 820 L0 820 Z" fill="#0f2534" opacity="0.92"/>
+
+          <!-- lake -->
+          <rect x="0" y="488" width="1440" height="332" fill="url(#lakeG)"/>
+          <!-- sun path on water -->
+          <g fill="#ffdf9e">
+            <ellipse class="shimmer" cx="470" cy="520" rx="120" ry="4" opacity="0.5"/>
+            <ellipse class="shimmer" cx="480" cy="545" rx="90" ry="3.4" opacity="0.45"/>
+            <ellipse class="shimmer" cx="455" cy="572" rx="130" ry="4" opacity="0.4"/>
+            <ellipse class="shimmer" cx="470" cy="604" rx="95" ry="3.6" opacity="0.32"/>
+            <ellipse class="shimmer" cx="478" cy="640" rx="140" ry="4.4" opacity="0.26"/>
+            <ellipse class="shimmer" cx="462" cy="688" rx="110" ry="4" opacity="0.2"/>
+          </g>
+
+          <!-- phumdis -->
+          <g class="ph">
+            <ellipse cx="240" cy="560" rx="86" ry="17" fill="#123a2c"/>
+            <ellipse cx="240" cy="554" rx="86" ry="13" fill="#1e5a3f"/>
+            <ellipse cx="222" cy="549" rx="30" ry="7" fill="#2c7a4f" opacity="0.8"/>
+          </g>
+          <g class="ph">
+            <ellipse cx="905" cy="585" rx="110" ry="20" fill="#123a2c"/>
+            <ellipse cx="905" cy="578" rx="110" ry="15" fill="#1e5a3f"/>
+            <ellipse cx="935" cy="573" rx="36" ry="8" fill="#2c7a4f" opacity="0.8"/>
+          </g>
+          <g class="ph">
+            <ellipse cx="1230" cy="548" rx="72" ry="13" fill="#123a2c"/>
+            <ellipse cx="1230" cy="543" rx="72" ry="10" fill="#1e5a3f"/>
+          </g>
+          <g class="ph">
+            <ellipse cx="640" cy="668" rx="128" ry="22" fill="#0f3226"/>
+            <ellipse cx="640" cy="660" rx="128" ry="17" fill="#1b4f38"/>
+            <ellipse cx="608" cy="655" rx="42" ry="8" fill="#2c7a4f" opacity="0.75"/>
+          </g>
+          <g class="ph">
+            <ellipse cx="1120" cy="705" rx="150" ry="24" fill="#0f3226"/>
+            <ellipse cx="1120" cy="697" rx="150" ry="18" fill="#1b4f38"/>
+            <ellipse cx="1160" cy="692" rx="48" ry="9" fill="#2c7a4f" opacity="0.75"/>
+          </g>
+          <g class="ph">
+            <ellipse cx="330" cy="742" rx="170" ry="26" fill="#0d2b20"/>
+            <ellipse cx="330" cy="733" rx="170" ry="19" fill="#194a33"/>
+          </g>
+
+          <!-- boat -->
+          <g class="boat">
+            <g transform="translate(760,640)">
+              <path d="M-64 0 Q0 16 64 0 L48 14 Q0 26 -48 14 Z" fill="#0b1c26"/>
+              <rect x="-6" y="-26" width="3.4" height="27" fill="#0b1c26"/>
+              <path d="M-14 -26 Q-4 -34 6 -26 L6 -21 Q-4 -28 -14 -21 Z" fill="#0b1c26" opacity="0.9"/>
+              <circle cx="9" cy="-32" r="6.5" fill="#0b1c26"/>
+              <path d="M-1 -26 Q9 -22 19 -27 L21 -12 Q10 -7 0 -12 Z" fill="#0b1c26"/>
+              <path d="M22 -8 L34 -34" stroke="#0b1c26" stroke-width="3" stroke-linecap="round"/>
+            </g>
+          </g>
+
+          <!-- mist -->
+          <g filter="url(#blurM)" fill="#ffffff">
+            <ellipse class="mist" cx="420" cy="500" rx="300" ry="26" opacity="0.14"/>
+            <ellipse class="mist m2" cx="1000" cy="470" rx="360" ry="22" opacity="0.12"/>
+            <ellipse class="mist" cx="760" cy="620" rx="420" ry="30" opacity="0.09"/>
+          </g>
+          <g filter="url(#blurM2)" fill="#f6e3c8">
+            <ellipse class="mist m2" cx="560" cy="430" rx="420" ry="30" opacity="0.1"/>
+          </g>
+
+          <!-- foreground shore -->
+          <path d="M0 820 L0 760 Q180 738 340 762 Q520 790 700 780 Q940 766 1140 788 Q1300 804 1440 784 L1440 820 Z" fill="#081820"/>
+          <g stroke="#0a2230" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.9">
+            <path d="M80 800 q6 -30 -4 -46"/><path d="M96 802 q-4 -26 8 -44"/><path d="M1200 806 q8 -28 -2 -46"/>
+            <path d="M1220 804 q-6 -24 10 -40"/><path d="M1380 810 q6 -26 -4 -42"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="hero-content">
+        <span class="hero-kicker">✦ The jewelled land of the North East</span>
+        <h1 class="hero-title">The lake that <em>floats</em>, the hills that <em>bloom</em>.</h1>
+        <p class="hero-sub">Loktak's drifting phumdis. The Shirui lily that grows nowhere else on Earth. Polo's first ground,
+          five centuries of mothers' market, and a festival for every season — planned around you in minutes.</p>
+
+        <div class="hero-row">
+          <div id="heroSearchWrap" class="hero-search">
+            <span class="s-ic">⌕</span>
+            <input id="heroSearch" type="text" placeholder="Try “Loktak”, “Dzükou”, “eromba”, “festivals in November”…" autocomplete="off" aria-label="Search Manipur">
+            <button class="hero-search-btn" data-goto="explore">Explore all</button>
+            <div id="heroResults" role="listbox"></div>
+          </div>
+          <div class="hero-live">
+            <span class="live-chip" id="heroWeather"><span class="dot-live"></span> Reading the sky over Imphal…</span>
+            <span id="heroClock"></span>
+            <div class="live-strip" id="liveStrip"></div>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-cue">⌄</div>
+    </header>
+
+    <div class="pattern-strip"></div>
+
+    <!-- season + featured -->
+    <section class="section">
+      <div class="wrap">
+        <div id="seasonBanner" class="season-banner reveal"></div>
+
+        <div class="section-head" style="margin-top:3.4rem;">
+          <span class="kicker">Chosen for this moment</span>
+          <h2>Where you should be, right now</h2>
+          <p class="lede">Ranked against the season, the light and the mood of the month — refreshed for today, not last year's brochure.</p>
+        </div>
+        <div id="homeFeatured" class="grid-auto"></div>
+
+        <div style="text-align:center; margin-top:2.6rem;">
+          <button class="btn ghost big" data-goto="explore">Browse all 34 destinations →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- experiences (deep) -->
+    <section class="section deep">
+      <div class="wrap">
+        <div class="section-head center">
+          <span class="kicker">Do, don't just see</span>
+          <h2>Experiences you'll retell for years</h2>
+          <p class="lede">The things brochures can't sell — a dawn safari for a dancing deer, a night on the water, polo where it was born.</p>
+        </div>
+        <div id="homeExperiences" class="grid-auto" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));"></div>
+      </div>
+    </section>
+
+    <!-- why strip -->
+    <section class="section tint">
+      <div class="wrap">
+        <div class="section-head center">
+          <span class="kicker">Why plan here</span>
+          <h2>Built like a local friend, not a flyer</h2>
+        </div>
+        <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr));">
+          <div class="why-card reveal"><span>🧭</span><h3>Routes that respect geography</h3><p>Days are clustered by direction of the hills, so you spend time in places, not in traffic between them.</p></div>
+          <div class="why-card reveal"><span>🌤️</span><h3>Live conditions, honestly</h3><p>Real weather and sunrise times for the exact day you'll be at the lake — not seasonal averages pretending.</p></div>
+          <div class="why-card reveal"><span>🎆</span><h3>The calendar, decoded</h3><p>Twelve festivals mapped to the months they actually fall in, with the places that celebrate them best.</p></div>
+          <div class="why-card reveal"><span>💬</span><h3>Ask, and it's arranged</h3><p>The concierge answers in plain language and files places straight into your trip. No forms unless you like forms.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="padding-top:0;">
+      <div class="wrap">
+        <div class="cta-band reveal">
+          <div>
+            <h2>Two minutes to your Manipur</h2>
+            <p>Choose your days, your pace, your pull — and the Trip Studio routes every stop, drive and meal.</p>
+          </div>
+          <button class="btn rose big" data-goto="plan">Open the Trip Studio</button>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ============================ EXPLORE ============================ -->
+  <section class="view" data-view="explore">
+    <div class="section" style="padding-top:6.4rem;">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker">Every destination</span>
+          <h2>Explore Manipur, filtered to your taste</h2>
+          <p class="lede">Thirty-four places across ten districts — lakes, forts, caves, ridges and border bazaars. Sort them your way.</p>
+        </div>
+
+        <div class="explore-layout">
+          <aside class="filters">
+            <div class="f-group">
+              <h4>Search</h4>
+              <input id="exploreSearch" type="text" placeholder="Name, district, vibe…" style="width:100%;border:1.5px solid var(--line);border-radius:999px;padding:0.55rem 1rem;font-size:0.9rem;outline:none;">
+            </div>
+            <div class="f-group">
+              <h4>District</h4>
+              <div id="districtFilters" class="f-check-col"></div>
+            </div>
+            <div class="f-group">
+              <h4>Interests</h4>
+              <div id="interestFilters" class="chip-row"></div>
+            </div>
+            <div class="f-group">
+              <h4>Budget</h4>
+              <div id="costFilters" class="chip-row"></div>
+            </div>
+            <div class="f-group filter-row">
+              <div style="flex:1;">
+                <h4 style="margin-bottom:0.5rem;">Best in</h4>
+                <select id="exploreMonth" style="width:100%;"></select>
+              </div>
+            </div>
+            <button id="clearFilters" class="chip-btn ghost" style="align-self:flex-start;">Clear all filters</button>
+          </aside>
+
+          <div>
+            <div class="explore-meta">
+              <span><strong id="exploreCount">34</strong> places match</span>
+              <select id="exploreSort" class="tool-select">
+                <option value="smart">Smartest match first</option>
+                <option value="near">Closest to Imphal</option>
+                <option value="name">A to Z</option>
+              </select>
+            </div>
+            <div id="exploreGrid" class="grid-auto"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ MAP ============================ -->
+  <section class="view" data-view="map">
+    <div class="section" style="padding-top:6.2rem;">
+      <div class="wrap">
+        <div class="section-head" style="margin-bottom:1.4rem;">
+          <span class="kicker">The lay of the land</span>
+          <h2>The whole state, one map</h2>
+          <p class="lede">Pins carry the same filters as Explore. Generate a route in the Trip Studio and it draws itself here.</p>
+        </div>
+        <div class="map-layout">
+          <aside class="map-side">
+            <div class="map-side-head">
+              <strong>Filtered places</strong>
+              <span class="hint-line" id="mapListCount"></span>
+            </div>
+            <div id="mapList" style="display:flex;flex-direction:column;gap:0.55rem;"></div>
+          </aside>
+          <div id="mapCanvas" aria-label="Interactive map of Manipur"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ TRIP STUDIO ============================ -->
+  <section class="view" data-view="plan">
+    <div class="section" style="padding-top:6.4rem;">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker">Trip Studio</span>
+          <h2>Tell us how you travel. We'll shape the rest.</h2>
+          <p class="lede">Nothing is pre-filled — your route grows from your answers, your saved places and the season you're travelling in.</p>
+        </div>
+
+        <div id="planFormWrap" class="plan-grid" style="max-width:860px;">
+          <div class="field">
+            <label for="planDays">How many days? (1–10)</label>
+            <input id="planDays" type="number" min="1" max="10" inputmode="numeric" placeholder="e.g. 5">
+            <p class="sub">Arranging from Imphal, the valley capital.</p>
+          </div>
+          <div class="field">
+            <label for="planStart">Starting when?</label>
+            <input id="planStart" type="date">
+            <p class="sub">Pick a date and live weather rides along with each day.</p>
+          </div>
+          <div class="field field-full">
+            <label>What pulls you here?</label>
+            <div id="planInterests" class="chip-row"></div>
+          </div>
+          <div class="field">
+            <label>Your pace</label>
+            <div id="planPace" class="opt-row"></div>
+          </div>
+          <div class="field">
+            <label>Comfort & budget</label>
+            <div id="planBudget" class="opt-row"></div>
+          </div>
+          <div class="field field-full">
+            <label>Pinned places</label>
+            <div id="planMustWrap"></div>
+          </div>
+        </div>
+
+        <div style="max-width:860px;">
+          <div id="planHints" aria-live="polite"></div>
+          <div class="plan-generate-row">
+            <button id="planGenerate" class="btn primary big" disabled>Shape my route</button>
+            <span class="hint-line">Change anything and press again — every run is freshly reasoned.</span>
+          </div>
+        </div>
+
+        <div id="planOutput">
+          <div id="planTotals"></div>
+          <div id="itineraryDays"></div>
+          <div id="planActions">
+            <button id="planRemix" class="btn ghost">↻ Remix</button>
+            <button id="planPrint" class="btn ghost">🖨 Print / save as PDF</button>
+            <button id="planICS" class="btn ghost">📅 Add to calendar</button>
+            <button id="planCopy" class="btn ghost">📋 Copy as text</button>
+            <button id="planShare" class="btn primary">🔗 Share this route</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FOOD ============================ -->
+  <section class="view" data-view="food">
+    <div class="section tint" style="padding-top:6.4rem;">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker">The table of Manipur</span>
+          <h2>Eat like the valley eats</h2>
+          <p class="lede">Herb-forward, chilli-honest, lake-fed. Fifteen things to hunt down, from fiery eromba to black-rice kheer.</p>
+        </div>
+        <div id="foodFilters" class="food-filters">
+          <button class="f-chip on" data-foodf="all">Everything</button>
+          <button class="f-chip" data-foodf="veg">Vegetarian-friendly</button>
+          <button class="f-chip" data-foodf="nonveg">Fish & meat</button>
+          <button class="f-chip" data-foodf="hot">Bring the heat</button>
+          <button class="f-chip" data-foodf="sweet">Gentle & sweet</button>
+        </div>
+        <div id="foodGrid" class="grid-auto" style="grid-template-columns:repeat(auto-fill,minmax(340px,1fr));"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FESTIVALS ============================ -->
+  <section class="view" data-view="festivals">
+    <div class="section" style="padding-top:6.4rem;">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker">A year of colour</span>
+          <h2>The festival calendar</h2>
+          <p class="lede">Lunar dates shift a little each year — the fixed ones are pinned, the moving ones give their honest window.</p>
+        </div>
+        <div id="festNow" class="fest-now"></div>
+        <div id="festivalTimeline" class="fest-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ STAY & TRAVEL ============================ -->
+  <section class="view" data-view="travel">
+    <div class="section" style="padding-top:6.4rem;">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker">Getting there & resting well</span>
+          <h2>Stay & Travel, plainly told</h2>
+          <p class="lede">How to reach the valley, how to move around it, where to sleep — and the small print that makes trips smooth.</p>
+        </div>
+        <div id="transportGrid" class="tr-grid"></div>
+
+        <div class="section-head" style="margin-top:3.6rem;">
+          <span class="kicker">Sleep options</span>
+          <h2>Where to lay your head</h2>
+        </div>
+        <div id="staysGrid" class="grid-auto" style="grid-template-columns:repeat(auto-fill,minmax(310px,1fr));"></div>
+      </div>
+    </div>
+
+    <div class="section deep">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker">Before you pack</span>
+          <h2>The essentials, honestly</h2>
+        </div>
+        <div id="essentialsGrid" class="ess-grid"></div>
+
+        <div class="section-head" style="margin-top:3.4rem;">
+          <span class="kicker">Save these</span>
+          <h2>Emergency numbers</h2>
+        </div>
+        <div id="emergencyList" class="emg-grid"></div>
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="f-brand">
+          <a class="brand" href="#/home" data-nav data-nav-view="home">
+            <span class="brand-mark">✦</span>
+            <span class="brand-name" style="color:#fff;">Sana Leibak<small>Discover Manipur</small></span>
+          </a>
+          <p>“Sana Leibak” — the golden land — is what Manipur calls itself. This is a traveller's companion to it:
+            every route reasoned, every festival dated, every recommendation earned.</p>
+        </div>
+        <div>
+          <h4>Plan</h4>
+          <ul>
+            <li><button data-goto="explore">All destinations</button></li>
+            <li><button data-goto="plan">Trip Studio</button></li>
+            <li><button data-goto="map">Map of Manipur</button></li>
+            <li><button data-goto="festivals">Festival calendar</button></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Taste & know</h4>
+          <ul>
+            <li><button data-goto="food">Food of Manipur</button></li>
+            <li><button data-goto="travel">Stay & travel</button></li>
+            <li><button data-goto="travel">Permits & essentials</button></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Sana Leibak · Made with respect for the people of the Sanaleibak.</span>
+        <span>Map data © OpenStreetMap contributors · Weather by Open-Meteo · <button id="creditsBtn" style="color:#ffd98a;">Photo credits</button></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================ OVERLAYS ============================ -->
+
+  <div id="detailOverlay" role="dialog" aria-modal="true">
+    <div class="detail-modal">
+      <div id="detailBody"></div>
+    </div>
+  </div>
+
+  <button id="tripFab" aria-label="Open my trip">♡ My trip <span class="tripCount">0</span></button>
+
+  <div id="drawerScrim"></div>
+  <aside id="tripDrawer" aria-label="My trip">
+    <div class="drawer-head">
+      <h3>My trip <span class="tripCount" style="margin-left:0.4rem;">0</span></h3>
+      <button id="tripClose" aria-label="Close">✕</button>
+    </div>
+    <div id="tripList"></div>
+    <div class="drawer-foot">
+      <button id="tripToPlan" class="btn primary wide">Build a route from these →</button>
+    </div>
+  </aside>
+
+  <button id="chatFab" aria-label="Open the travel concierge">💬</button>
+  <div id="chatPanel" role="dialog" aria-label="Travel concierge">
+    <div class="chat-head">
+      <span class="chat-avatar">🪷</span>
+      <div class="chat-head-info">
+        <strong>The Concierge</strong>
+        <span>Knows Manipur — ask anything</span>
+      </div>
+      <button id="chatClose" aria-label="Close chat">✕</button>
+    </div>
+    <div id="chatLog"></div>
+    <form id="chatForm" class="chat-form">
+      <input id="chatInput" type="text" placeholder="Ask about places, food, weather, permits…" autocomplete="off">
+      <button id="chatSend" type="submit" aria-label="Send">➤</button>
+    </form>
+  </div>
+
+  <div id="creditsOverlay">
+    <div class="credits-box">
+      <h3>Photo & data credits</h3>
+      <p>Photographs are used under their Creative Commons / public-domain licences via Wikimedia Commons;
+        author and licence are listed with each image file in <code>assets/ATTRIBUTIONS.txt</code>.</p>
+      <ul>
+        <li>Map tiles © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, tiles by <a href="https://carto.com/" target="_blank" rel="noopener">CARTO</a></li>
+        <li>Live weather & air quality: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></li>
+        <li>Interactive map: <a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a></li>
+        <li>Typefaces: Fraunces & Outfit (Google Fonts, OFL)</li>
+      </ul>
+      <button class="btn primary" onclick="document.getElementById('creditsOverlay').classList.remove('open')">Close</button>
+    </div>
+  </div>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <noscript><div style="padding:2rem;text-align:center;">This companion needs JavaScript — please enable it and refresh.</div></noscript>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/engine.js" defer></script>
+  <script src="js/chat.js" defer></script>
+  <script src="js/map.js" defer></script>
+  <script src="js/images.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
