@@ -81,7 +81,7 @@ const MapMod = (() => {
       <p>${d.blurb}</p>
       <div class="map-pop-actions">
         <button data-mp="open" data-id="${d.id}">Details</button>
-        <button data-mp="trip" data-id="${d.id}">${inTrip ? '✓ In your trip' : 'Add to trip'}</button>
+        <button data-mp="trip" data-id="${d.id}">${inTrip ? '✓ In your trip' : '+ Add to trip'}</button>
       </div>
     </div>`;
   }

@@ -37,8 +37,15 @@ const App = (() => {
       document.querySelectorAll('[data-tripbtn]').forEach(btn => {
         const id = btn.getAttribute('data-tripbtn');
         btn.classList.toggle('active', this.has(id));
-        const label = btn.querySelector('span');
-        if (label) label.textContent = this.has(id) ? 'In your trip' : 'Add to trip';
+        const icon = btn.querySelector('.trip-icon');
+        const label = btn.querySelector('.trip-label');
+        if (btn.classList.contains('d-save')) {
+          if (icon) icon.textContent = this.has(id) ? '✓' : '+';
+          btn.title = this.has(id) ? 'Remove from trip' : 'Add to trip';
+          btn.setAttribute('aria-label', this.has(id) ? `Remove ${id} from trip` : `Add ${id} to trip`);
+        } else if (label) {
+          label.textContent = this.has(id) ? 'In your trip' : 'Add to trip';
+        }
       });
     }
   };
@@ -159,7 +166,7 @@ const App = (() => {
           <img loading="lazy" src="${imgFor(d)}" alt="${esc(d.name)}">
           ${now ? `<span class="d-now">● ${now}</span>` : ''}
           <button class="d-save ${inTrip ? 'active' : ''}" data-tripbtn="${d.id}" title="Add to trip" aria-label="Add ${esc(d.name)} to trip">
-            <span class="ic">♡</span>
+            <span class="trip-icon">+</span>
           </button>
         </div>
         <div class="d-card-body">
@@ -350,7 +357,7 @@ const App = (() => {
               <h5>Live weather there</h5>
               <div id="detailWx"><div class="wx-loading">Reading the sky…</div></div>
             </div>
-            <button class="btn primary wide" data-tripbtn="${d.id}"><span>Add to trip</span></button>
+            <button class="btn primary wide" data-tripbtn="${d.id}"><span class="trip-icon">+</span> <span class="trip-label">Add to trip</span></button>
             <button class="btn ghost wide" data-mapfocus="${d.id}">Show on the map</button>
           </aside>
         </div>

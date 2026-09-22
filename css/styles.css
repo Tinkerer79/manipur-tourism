@@ -344,8 +344,8 @@ h3 { font-size: 1.15rem; }
 }
 .d-save:hover { transform: scale(1.12); }
 .d-save.active { background: var(--rose); color: #fff; }
-.d-save.active .ic { content: "♥"; }
-.d-save .ic { pointer-events: none; }
+.d-save .trip-icon { pointer-events: none; line-height: 1; font-size: 1.35rem; font-weight: 400; }
+.btn .trip-icon { font-size: 1.25em; line-height: 0; vertical-align: -0.06em; }
 .d-card-body { padding: 1.2rem 1.3rem 1.3rem; display: flex; flex-direction: column; gap: 0.45rem; flex: 1; }
 .d-card-top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem; }
 .d-card-top h3 { font-size: 1.22rem; }
