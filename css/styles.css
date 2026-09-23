@@ -691,6 +691,16 @@ h3 { font-size: 1.15rem; }
   box-shadow: var(--shadow-1); transition: transform 0.2s var(--ease); font-size: 0.92rem;
 }
 .map-item:hover { transform: translateX(3px); }
+.map-item:active { transform: translateX(3px) scale(0.985); }
+.map-item.is-focused {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12), var(--shadow-1);
+  animation: mapItemFocus 1.15s var(--ease);
+}
+@keyframes mapItemFocus {
+  0% { background: var(--gold-soft); }
+  100% { background: var(--cream); }
+}
 .map-item .pin-ic { width: 12px; height: 12px; border-radius: 50%; flex: none; }
 .map-item strong { display: block; font-size: 0.9rem; color: var(--ink); }
 .map-item span { font-size: 0.75rem; color: var(--txt-2); }

@@ -107,7 +107,16 @@ const MapMod = (() => {
 
   function focus(d) {
     if (!ready) return;
-    map.flyTo(d.coords, Math.max(10, map.getZoom()), { duration: 0.8 });
+    document.querySelectorAll('.map-item.is-focused').forEach(el => el.classList.remove('is-focused'));
+    const listItem = document.querySelector(`[data-mapgo="${d.id}"]`);
+    if (listItem) {
+      listItem.classList.add('is-focused');
+      listItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    map.flyTo(d.coords, Math.max(13, map.getZoom()), {
+      duration: 1.15,
+      easeLinearity: 0.18
+    });
     const m = markers.get(d.id);
     if (m) setTimeout(() => m.openPopup(), 850);
   }
