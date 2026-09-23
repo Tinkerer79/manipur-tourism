@@ -341,8 +341,8 @@
       <div class="wrap">
         <div class="section-head">
           <span class="kicker">Trip Studio</span>
-          <h2>Tell it how you travel, get a route back</h2>
-          <p class="lede">Your route is built from your answers below, plus any places you saved.</p>
+          <h2>Build a practical Manipur trip</h2>
+          <p class="lede">Tell us your days, arrival, interests and pace. We’ll group nearby places into a simple day-by-day route instead of randomly listing stops.</p>
         </div>
 
         <div id="planFormWrap" class="plan-grid" style="max-width:860px;">
@@ -352,20 +352,34 @@
             <p class="sub">Arranging from Imphal, the valley capital.</p>
           </div>
           <div class="field">
-            <label for="planStart">Starting when?</label>
+            <label for="planStart">Trip starts</label>
             <input id="planStart" type="date">
-            <p class="sub">Pick a date and live weather rides along with each day.</p>
+            <p class="sub">Choose your first day in Manipur.</p>
+          </div>
+          <div class="field">
+            <label for="planArrival">How are you arriving?</label>
+            <select id="planArrival">
+              <option value="city">Already in Imphal</option>
+              <option value="flight">Flight to Imphal</option>
+              <option value="road">Road / taxi</option>
+            </select>
+            <p class="sub">Flight arrivals start with hotel check-in and rest.</p>
+          </div>
+          <div class="field">
+            <label for="planArrivalTime">Arrival time (optional)</label>
+            <input id="planArrivalTime" type="time">
+            <p class="sub">Useful for deciding whether Day 1 should be light.</p>
           </div>
           <div class="field field-full">
-            <label>What pulls you here?</label>
+            <label>What do you want to experience?</label>
             <div id="planInterests" class="chip-row"></div>
           </div>
           <div class="field">
-            <label>Your pace</label>
+            <label>How much do you want to cover?</label>
             <div id="planPace" class="opt-row"></div>
           </div>
           <div class="field">
-            <label>Comfort & budget</label>
+            <label>Stay style</label>
             <div id="planBudget" class="opt-row"></div>
           </div>
           <div class="field field-full">
@@ -384,6 +398,7 @@
 
         <div id="planOutput">
           <div id="planTotals"></div>
+          <div id="planRouteNote" class="plan-route-note"></div>
           <div id="itineraryDays"></div>
           <div id="planActions">
             <button id="planRemix" class="btn ghost">↻ Remix</button>

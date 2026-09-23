@@ -30,11 +30,22 @@ window.SANA_DATA = {
     {name:'Kabok', icon:'🍘', tag:'veg sweet', desc:'Puffed rice mixed with jaggery or sugar, a simple and much-loved snack.', where:'Local markets'}
   ],
   festivals: [
-    {month:'January', name:'Lui-Ngai-Ni', window:'Late January / February', place:'Naga communities across Manipur', desc:'A seed-sowing festival celebrating unity, renewal and cultural performance.'},
-    {month:'March', name:'Yaoshang', window:'Five days around Holi', place:'Across Manipur', desc:'A lively spring festival shaped by sport, music and community gatherings.'},
-    {month:'April', name:'Cheiraoba', window:'April', place:'Across Manipur', desc:'Manipuri New Year, often observed with family meals and hill climbs.'},
-    {month:'November', name:'Sangai Festival', window:'Usually November', place:'Imphal and venues across the state', desc:'A broad cultural festival featuring crafts, food, sport and performances.'},
-    {month:'November', name:'Ningol Chakouba', window:'November / December', place:'Across Manipur', desc:'A family-centred festival where married daughters return to their parental homes.'},
-    {month:'December', name:'Kang Chingba', window:'Seasonal dates vary', place:'Imphal', desc:'A traditional procession with music, ritual and collective celebration.'}
+    {month:'January', name:'Gang-Ngai', window:'December / January', place:'Kabui Naga communities', desc:'A five-day festival of feasting, dances, music and community gatherings.'},
+    {month:'February', name:'Lui-Ngai-Ni', window:'15 February', place:'Naga communities across Manipur', desc:'A Naga seed-sowing festival marked by songs, dances and community celebrations.'},
+    {month:'March', name:'Yaosang', window:'February / March · 5 days', place:'Across Manipur', desc:'Manipur’s major spring festival, known for Thabal Chongba, sports and community celebrations.'},
+    {month:'April', name:'Cheiraoba', window:'April', place:'Across Manipur', desc:'The Manipuri New Year, with traditional food, prayers and hilltop visits.'},
+    {month:'April', name:'Khongjom Day', window:'23 April', place:'Khongjom, Thoubal', desc:'A day of remembrance at the Khongjom War Memorial, linked to Manipur’s 1891 history.'},
+    {month:'May', name:'Shirui Lily Festival', window:'May · blooming season', place:'Ukhrul', desc:'A tourism and cultural celebration around Manipur’s state flower, the rare Shirui lily.'},
+    {month:'May', name:'Lai Haraoba', window:'May – June', place:'Moirang and other communities', desc:'A traditional ritual festival honouring the Umang Lai through music, dance and ceremony.'},
+    {month:'May', name:'Paoki Festival', window:'May', place:'Purul, Senapati', desc:'A traditional paddy-transplantation festival connected with agricultural life.'},
+    {month:'July', name:'Kang / Rath Yatra', window:'June / July · about 10 days', place:'Imphal', desc:'A major festival in which the Jagannath chariot procession moves through the city.'},
+    {month:'August', name:'Pineapple Festival', window:'22–23 August', place:'Khousabung, Churachandpur', desc:'A local festival celebrating pineapple growers, produce and community culture.'},
+    {month:'September', name:'Heikru Hidongba', window:'September', place:'Bijoy Govindajee Temple, Imphal', desc:'A traditional boat-race festival held with rituals at the temple moat.'},
+    {month:'October', name:'Mera Hou Chongba', window:'October', place:'Imphal and participating communities', desc:'A cultural festival that brings communities together through traditional ceremonies and performances.'},
+    {month:'November', name:'Kut', window:'1 November', place:'Kuki-Chin-Mizo communities', desc:'An autumn harvest festival celebrating community, food, music and thanksgiving.'},
+    {month:'November', name:'Ningol Chakouba', window:'November', place:'Across Manipur', desc:'A family reunion festival when married daughters return to their parental homes for a feast.'},
+    {month:'November', name:'Manipur Sangai Festival', window:'Usually November', place:'Imphal and venues across Manipur', desc:'A major tourism festival showcasing culture, handloom, handicrafts, food, sports and performances.'},
+    {month:'December', name:'Chumpha Festival', window:'December · 7 days', place:'Tangkhul Naga communities', desc:'A post-harvest festival featuring social gatherings, traditional customs and celebrations.'},
+    {month:'December', name:'Christmas', window:'24–25 December', place:'Across Manipur', desc:'Christmas is widely observed by Christian communities across the state.'}
   ]
 };

@@ -10,7 +10,7 @@
     saved: JSON.parse(localStorage.getItem('sana-saved') || '[]'),
     interests: new Set(), districts: new Set(), budget: new Set(), month: '',
     food: 'all', chat: [], chatBusy: false, chatRoute: null,
-    plan: { interests: new Set(), pace: '', budget: '' }
+    plan: { interests: new Set(), pace: '', budget: '', arrival: 'city', arrivalTime: '' }
   };
 
   const byId = id => places.find(p => p.id === id);
@@ -273,56 +273,148 @@
     const int = ['Nature', 'Culture', 'History', 'Food', 'Trekking', 'Wildlife'];
     $('#planInterests').innerHTML = int.map(x => `<button type="button" class="chip-btn" aria-pressed="false" data-plan-interest="${x}">${x}</button>`).join('');
     $('#planPace').innerHTML = [
-      ['slow', 'Slow & spacious', 'One or two anchors a day'],
-      ['balanced', 'Balanced', 'A full, comfortable day'],
-      ['active', 'Active', 'More ground, earlier starts']
+      ['slow', 'Relaxed', '1–2 main stops a day'],
+      ['balanced', 'Balanced', '2–3 useful stops a day'],
+      ['active', 'Packed', 'More places, earlier starts']
     ].map(x => `<button type="button" class="opt-card" aria-pressed="false" data-pace="${x[0]}"><strong>${x[1]}</strong><span>${x[2]}</span></button>`).join('');
     $('#planBudget').innerHTML = [
-      ['budget', 'Budget-minded', 'Simple stays & local food'],
-      ['mid', 'Comfortable', 'More flexibility'],
-      ['open', 'Open-ended', 'Choose as you go']
+      ['budget', 'Simple', 'Budget stays & local food'],
+      ['mid', 'Comfort', 'More flexibility'],
+      ['open', 'Flexible', 'Choose as you go']
     ].map(x => `<button type="button" class="opt-card" aria-pressed="false" data-plan-budget="${x[0]}"><strong>${x[1]}</strong><span>${x[2]}</span></button>`).join('');
+    const today = new Date().toISOString().slice(0,10);
+    if ($('#planStart') && !$('#planStart').value) $('#planStart').value = today;
   }
 
   function validatePlan() {
     const days = Number($('#planDays').value);
     const okay = days >= 1 && days <= 10 && $('#planStart').value && state.plan.interests.size && state.plan.pace && state.plan.budget;
     $('#planGenerate').disabled = !okay;
-    $('#planHints').textContent = okay ? 'Ready to shape your route.' : 'Add days, a start date, at least one interest, pace and budget.';
+    $('#planHints').textContent = okay ? 'Ready — we’ll keep nearby places together and avoid overloading each day.' : 'Choose days, at least one interest, a pace and a stay style.';
+  }
+
+  function routeScore(p, fav) {
+    const matches = p.tags.filter(t => fav.includes(t)).length;
+    const saved = state.saved.includes(p.id) ? 3 : 0;
+    const distancePenalty = p.distance / 100;
+    return matches * 10 + saved - distancePenalty;
+  }
+
+  function zoneOf(p) {
+    if (['Imphal West','Imphal East'].includes(p.district)) return 'Imphal';
+    if (['Bishnupur','Thoubal','Kakching'].includes(p.district)) return 'South & Valley';
+    if (p.district === 'Ukhrul') return 'Ukhrul & Hills';
+    if (['Senapati','Kangpokpi'].includes(p.district)) return 'North & Hills';
+    return 'West & Hills';
   }
 
   function makePlan() {
-    const days = Number($('#planDays').value), start = new Date(`${$('#planStart').value}T12:00:00`);
+    const days = Number($('#planDays').value);
+    const start = new Date(`${$('#planStart').value}T12:00:00`);
     const fav = [...state.plan.interests];
-    let pool = [...state.saved.map(byId), ...places.filter(p => p.tags.some(t => state.plan.interests.has(t)))]
-      .filter((p, i, a) => p && a.findIndex(x => x.id === p.id) === i);
-    if (!pool.length) pool = places;
-    pool.sort((a, b) => a.distance - b.distance);
-    const groups = [];
-    for (let i = 0; i < days; i++) groups.push(pool.slice(i * 2, i * 2 + 2).length ? pool.slice(i * 2, i * 2 + 2) : [pool[i % pool.length]]);
+    const pace = state.plan.pace || 'balanced';
+    const budget = state.plan.budget || 'open';
+    const arrival = $('#planArrival')?.value || 'city';
+    const arrivalTime = $('#planArrivalTime')?.value || '';
+
+    // Score places from the user's actual choices. Every place gets a score,
+    // so changing interests / budget / pace changes the route instead of
+    // returning the same template every time.
+    const budgetRank = { budget: ['Budget'], mid: ['Budget','Mid-range'], open: ['Budget','Mid-range'] };
+    const target = budgetRank[budget] || budgetRank.open;
+    const score = p => {
+      let n = 0;
+      n += p.tags.reduce((sum, t) => sum + (fav.includes(t) ? 14 : 0), 0);
+      n += target.includes(p.cost) ? 5 : -3;
+      n += state.saved.includes(p.id) ? 8 : 0;
+      // Prefer a mix of close and farther destinations rather than sorting only by distance.
+      n += Math.max(0, 10 - Math.abs(p.distance - (pace === 'active' ? 70 : pace === 'slow' ? 20 : 45)) / 10);
+      return n;
+    };
+
+    let pool = [...places].sort((a,b) => score(b) - score(a));
+    if (!pool.length) return;
+
+    // Pace controls how many meaningful stops are planned.
+    const perDay = pace === 'slow' ? 1 : pace === 'active' ? 3 : 2;
+    const needed = Math.min(pool.length, days * perDay);
+
+    // Build each day as a small geographic cluster. This prevents every day
+    // from looking identical and avoids sending the user back and forth.
+    const remaining = pool.slice();
+    const groups = Array.from({length: days}, () => []);
+    const used = new Set();
+
+    function distance(a,b) {
+      return Math.abs((a.distance || 0) - (b.distance || 0));
+    }
+
+    // Start with the highest-scoring place for each day, using different areas.
+    const seededZones = new Set();
+    for (let d = 0; d < days && used.size < needed; d++) {
+      const candidate = remaining.find(p => !used.has(p.id) && !seededZones.has(zoneOf(p))) || remaining.find(p => !used.has(p.id));
+      if (!candidate) break;
+      groups[d].push(candidate);
+      used.add(candidate.id);
+      seededZones.add(zoneOf(candidate));
+    }
+
+    // Fill each day with places near that day's first stop and matching the interests.
+    for (let d = 0; d < days; d++) {
+      const anchor = groups[d][0];
+      if (!anchor) continue;
+      while (groups[d].length < perDay && used.size < needed) {
+        const candidates = remaining.filter(p => !used.has(p.id));
+        if (!candidates.length) break;
+        candidates.sort((a,b) => {
+          const sa = score(a) - distance(a, anchor) * 0.35;
+          const sb = score(b) - distance(b, anchor) * 0.35;
+          return sb - sa;
+        });
+        const next = candidates[0];
+        groups[d].push(next);
+        used.add(next.id);
+      }
+    }
+
+    // If the user selected more days than available distinct places, leave the
+    // extra day flexible instead of silently repeating destinations.
+    const arrivalText = arrival === 'flight'
+      ? `Flight arrival${arrivalTime ? ` around ${arrivalTime}` : ''}: check in first, rest for at least 10 minutes, then keep Day 1 close to Imphal.`
+      : arrival === 'road'
+        ? 'Road arrival: allow extra travel time, so the first day stays close to Imphal.'
+        : 'Starting in Imphal: the route expands outward after the city stops.';
+
+    const totalStops = groups.reduce((n,g) => n + g.length, 0);
     $('#planTotals').innerHTML = `
       <div class="plan-totals-card">
-        <div><span class="kicker">Your route</span><h2>${days}-day Manipur outline</h2>
-        <p>Built around ${esc(fav.join(', '))}${state.saved.length ? ' and your saved places' : ''}.</p></div>
+        <div><span class="kicker">Your route</span><h2>${days}-day Manipur trip</h2>
+        <p>${esc(arrivalText)}</p></div>
         <div class="totals">
           <div><strong>${days}</strong><span>days</span></div>
-          <div><strong>${pool.slice(0, days * 2).length}</strong><span>stops</span></div>
-          <div><strong>${esc(state.plan.pace)}</strong><span>pace</span></div>
+          <div><strong>${totalStops}</strong><span>stops</span></div>
+          <div><strong>${esc(pace)}</strong><span>pace</span></div>
         </div>
       </div>`;
+
+    const interestText = fav.length ? fav.join(', ') : 'your selected interests';
+    $('#planRouteNote').innerHTML = `<strong>Built for you:</strong> ${esc(interestText)} · ${esc(pace)} pace · ${esc(budget)} stay style. Nearby stops are grouped together so each day has a different route.`;
+
     $('#itineraryDays').innerHTML = groups.map((g, i) => {
       const date = new Date(start); date.setDate(start.getDate() + i);
+      if (!g.length) return `<article class="day-card"><div class="day-head"><div class="day-no">Day<br>${i+1}</div><div class="day-title"><h3>Free / flexible day</h3><span>No suitable unused destination left — add a saved place or change interests.</span></div></div></article>`;
+      const zone = zoneOf(g[0]);
       return `<article class="day-card">
         <div class="day-head">
           <div class="day-no">Day<br>${i + 1}</div>
-          <div class="day-title"><h3>${esc(g.map(x => x.district).filter((v, j, a) => a.indexOf(v) === j).join(' & '))}</h3>
-          <span>${date.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })} · Start from Imphal</span></div>
+          <div class="day-title"><h3>${esc(zone)}</h3>
+          <span>${date.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })} · ${esc(g.length === 1 ? 'One main stop' : `${g.length} stops nearby`)}</span></div>
         </div>
-        <div class="day-line">${g.map(p => `
+        <div class="day-line">${g.map((p,j) => `
           <div class="stop">
             <div class="stop-tl"><i class="stop-dot"></i></div>
             <div class="stop-body">
-              <div class="stop-top"><strong class="stop-name" data-detail="${p.id}">${esc(p.name)}</strong><span class="stop-cost">${p.distance} km</span></div>
+              <div class="stop-top"><strong class="stop-name" data-detail="${p.id}">${esc(j === 0 ? (pace === 'slow' ? 'Main stop · ' : 'Morning · ') + p.name : (j === 1 ? 'Afternoon · ' : 'Evening · ') + p.name)}</strong><span class="stop-cost">${p.distance} km</span></div>
               <p>${esc(p.blurb)}</p>
               <div class="stop-meta"><span>${esc(p.type)}</span><span>${esc(p.tags.join(' · '))}</span></div>
             </div>
@@ -331,7 +423,7 @@
     }).join('');
     $('#planOutput').classList.add('show');
     $('#planActions').classList.add('show');
-    toast('Your route is ready');
+    toast('A new route was built from your choices');
   }
 
   function downloadICS() {
@@ -638,6 +730,8 @@
     bindPlanControls();
     $('#planDays').oninput = validatePlan;
     $('#planStart').oninput = validatePlan;
+    $('#planArrival').onchange = () => { state.plan.arrival = $('#planArrival').value; };
+    $('#planArrivalTime').oninput = () => { state.plan.arrivalTime = $('#planArrivalTime').value; };
     $('#planGenerate').onclick = makePlan;
     $('#planRemix').onclick = makePlan;
     $('#planPrint').onclick = () => window.print();
