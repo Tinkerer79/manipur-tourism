@@ -1109,7 +1109,7 @@ h1, h2, h3, h4 { letter-spacing: 0; }
   /* hero photo + dark overlay with a bit less head-room */
   .hero { min-height: 520px; }
   .hero-content { padding-top: 8.6rem; padding-bottom: 3rem; }
-  .hero-search { padding-left: 0.9rem; }
+  .hero-search { padding-left: 0.9rem; flex: 0 0 auto; width: 100%; box-sizing: border-box; }
 
   /* day cards and stops get room to breathe on small screens */
   .stop-body { padding: 0.8rem 0.9rem; }
